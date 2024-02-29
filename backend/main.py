@@ -1,23 +1,25 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
+from calc import calculate_carbon_footprint
+
 
 app = FastAPI()
 
 class TransportationData(BaseModel):
+
     averageWeeklyMiles: float
-    vehicleFuelEfficiency: str
-    airTravelFrequency: str
-    publicTransportationUsage: str
-    carMaintanence: str
-    bikingWalkingFrequency: str
+    vehicleFuelEfficiency: float  
+    airTravelFrequency: int       
+    carSize: int            
+    carType: int 
 
 transportation_data = TransportationData(
-    averageWeeklyMiles=0,
-    vehicleFuelEfficiency="",
-    airTravelFrequency="",
-    publicTransportationUsage="",
-    carMaintanence="",
-    bikingWalkingFrequency=""
+
+    vehicleFuelEfficiency=0.0,           
+    airTravelFrequency=0,
+    publicTransportationUsage=0,
+    carMaintanence=0,
+    bikingWalkingFrequency=0
 )
 
 
@@ -26,15 +28,16 @@ async def calculate(data: TransportationData):
 
     # Access data fields
     average_weekly_miles = data.averageWeeklyMiles
-    vehicle_fuel_efficiency = data.vehicleFuelEfficiency
-    air_travel_frequency = data.airTravelFrequency
-    public_transportation_usage = data.publicTransportationUsage
-    car_maintenance = data.carMaintanence
-    biking_walking_frequency = data.bikingWalkingFrequency
+    vehicle_fuel_efficiency = float(data.vehicleFuelEfficiency)  
+    air_travel_frequency = int(data.airTravelFrequency)         //hour
+    car_size = int(data.carSize)                
+    car_type = int(data.carType)
 
     # Perform calculations using the received data
+    carbon_footprint = calculate_carbon_footprint(average_weekly_miles, vehicle_fuel_efficiency, air_travel_frequency, car_size, car_type)
 
-    carbon_footprint = average_weekly_miles * 0.05  # Example calculation
+    # Return the result
+    return {"carbon_footprint": carbon_footprint}
 
     print("Received data:", data)
 
