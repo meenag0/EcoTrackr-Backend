@@ -29,7 +29,7 @@ async def calculate(data: TransportationData):
     # Access data fields
     average_weekly_miles = data.averageWeeklyMiles
     vehicle_fuel_efficiency = float(data.vehicleFuelEfficiency)  
-    air_travel_frequency = int(data.airTravelFrequency)         //hour
+    air_travel_frequency = int(data.airTravelFrequency)    //hour
     car_size = int(data.carSize)                
     car_type = int(data.carType)
 

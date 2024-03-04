@@ -28,6 +28,9 @@ def calculate_carbon_emissions(progress, averageWeeklyMiles, vehicleFuelEfficien
     total_emissions = car_emission + plane_emission
     return total_emissions
 
+
+
+
 # Example usage:
 progress = 0
 averageWeeklyMiles = 200  # Example value
