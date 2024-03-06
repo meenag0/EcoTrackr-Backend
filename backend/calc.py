@@ -70,6 +70,10 @@ def energyEmissions(electricityUsage, naturalGasUsage, typeElectricity):
 #One serving (100g) of Fish is equivalent to 1.34kg CO2e, or 6.8km of driving.
 #One serving of Chicken (100g) is equivalent to 1.82kg CO2e, or 9.3km of driving. 
 #One serving of Chicken (100g) is equivalent to 1.82kg CO2e.
+# As a global average, dairy milk is responsible for 1.39 kilograms of CO2-equivalents to the atmosphere for every liter produced
 
 def foodEmissions(redMeatConsumption, poultryConsumption, seafoodConsumption, dairyConsumption):
-    
+    foodFootprint = (redMeatConsumption*15.5*4) + (poultryConsumption*1.82*4) + (seafoodConsumption*1.34*4) + (dairyConsumption*1.39)
+    return foodFootprint
+
+
