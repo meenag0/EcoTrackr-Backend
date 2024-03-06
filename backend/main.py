@@ -1,25 +1,26 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from calc import calculate_carbon_footprint
-
+from calc import carbonEmissions 
 
 app = FastAPI()
 
 class TransportationData(BaseModel):
 
-    averageWeeklyMiles: float
-    vehicleFuelEfficiency: float  
-    airTravelFrequency: int       
+    averageWeeklyKm: float
+    publicTransportFreq: float  
+    airTravelHours: int       
     carSize: int            
     carType: int 
 
+
 transportation_data = TransportationData(
 
-    vehicleFuelEfficiency=0.0,           
-    airTravelFrequency=0,
-    publicTransportationUsage=0,
-    carMaintanence=0,
-    bikingWalkingFrequency=0
+    averageWeeklyKm=0.0,           
+    publicTransportFreq=0,
+    airTravelHours=0,
+    carSize=0,
+    carType=0
+    
 )
 
 
@@ -27,22 +28,19 @@ transportation_data = TransportationData(
 async def calculate(data: TransportationData):
 
     # Access data fields
-    average_weekly_miles = data.averageWeeklyMiles
-    vehicle_fuel_efficiency = float(data.vehicleFuelEfficiency)  
-    air_travel_frequency = int(data.airTravelFrequency)    //hour
+    average_weekly_km = int(data.averageWeeklyKm)
+    public_transport = int(data.publicTransportFreq)  
+    air_travel_hours = int(data.airTravelHours)    #hour
     car_size = int(data.carSize)                
     car_type = int(data.carType)
 
     # Perform calculations using the received data
-    carbon_footprint = calculate_carbon_footprint(average_weekly_miles, vehicle_fuel_efficiency, air_travel_frequency, car_size, car_type)
+    carbon_footprint = carbonEmissions(average_weekly_km, air_travel_hours, car_size, car_type)
 
     # Return the result
     return {"carbon_footprint": carbon_footprint}
 
     print("Received data:", data)
-
-    # Return the result
-    return {"carbon_footprint": carbon_footprint}
 
 
 @app.get("/")
