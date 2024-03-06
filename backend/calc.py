@@ -71,5 +71,5 @@ def energyEmissions(electricityUsage, naturalGasUsage, typeElectricity):
 #One serving of Chicken (100g) is equivalent to 1.82kg CO2e, or 9.3km of driving. 
 #One serving of Chicken (100g) is equivalent to 1.82kg CO2e.
 
-def foodEmissions(redMeatConsumption):
+def foodEmissions(redMeatConsumption, poultryConsumption, seafoodConsumption, dairyConsumption):
     

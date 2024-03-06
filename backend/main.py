@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from calc import carbonEmissions 
+from calc import transportEmissions 
 
 app = FastAPI()
 
@@ -35,7 +35,7 @@ async def calculate(data: TransportationData):
     car_type = int(data.carType)
 
     # Perform calculations using the received data
-    carbon_footprint = carbonEmissions(average_weekly_km, air_travel_hours, car_size, car_type)
+    carbon_footprint = transportEmissions(average_weekly_km, air_travel_hours, car_size, car_type)
 
     # Return the result
     return {"carbon_footprint": carbon_footprint}
