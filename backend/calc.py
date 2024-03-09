@@ -52,9 +52,9 @@ def transportEmissions(averageWeeklyKm, airTravelHours, carSize, carType):
     
     flightEmissions = airTravelHours * 90
     
-    totalEmissions = carCarbonEmissions + flightEmissions
+    transEmissions = carCarbonEmissions + flightEmissions
 
-    return totalEmissions
+    return transEmissions
 
 
 def energyEmissions(electricityUsage, naturalGasUsage, typeElectricity):

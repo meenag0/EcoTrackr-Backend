@@ -31,3 +31,20 @@ food_goals = [["Reduce food waste by planning meals and using leftovers", "Weekl
         ["Buy sustainably sourced and certified food products (eg. Fair Trade)", "Monthly", "Description"],
 ]
 
+# other 
+
+# "How often do you shop from fast fashion?"}
+       # [rarely, occasionaly, often]
+
+fashion_goals = [
+    ["Buy fewer, durable clothes of higher quality", "Monthly", "Description"],
+    ["Shop secondhand or thrifted clothing", "Weekly", "Description"],
+    ["Support sustainable and ethical fashion brands", "Monthly", "Description"],
+    ["Repair and mend clothing instead of discarding", "Weekly", "Description"],
+    ["Donate or recycle old clothing", "Monthly", "Description"],
+    ["Reduce impulse purchases and consider environmental impact", "Monthly", "Description"],
+    ["Choose eco-friendly materials like organic cotton or recycled fibers", "Monthly", "Description"],
+    ["Educate about environmental and social impacts of fast fashion", "Monthly", "Description"],
+    ["Opt for versatile pieces that can be styled in multiple ways", "Monthly", "Description"],
+    ["Participate in clothing swaps with friends or community", "Monthly", "Description"]
+]            
