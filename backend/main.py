@@ -10,36 +10,37 @@ app = FastAPI()
 
 
 origins = [
-    "http://localhost:8000",
+    "http://localhost:8081",
 ]
+
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],  
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"]
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["*"],
 )
 
 
 class FullData(BaseModel):
-    averageWeeklyKm: float
-    publicTransportFreq: float  
-    airTravelHours: float       
-    carSize: float            
-    carType: float 
-    electricityUsage: float
-    naturalGasUsage:  float
-    lightUseTime: float
-    typeElectricity: float
-    redMeatConsumption: float
-    localFoodPurchases: float
-    poultryConsumption: float
-    dairyConsumption: float
-    seafoodConsumption: float
-    fastFashion: float
-    sustainableShoppingFrequency: float
-    Recycling: float
+    averageWeeklyKm: int 
+    publicTransportFreq: int 
+    airTravelHours: int 
+    carSize: int 
+    carType: int 
+    electricityUsage: int 
+    naturalGasUsage:  int 
+    lightUseTime: int 
+    typeElectricity: int 
+    redMeatConsumption: int 
+    localFoodPurchases: int 
+    poultryConsumption: int 
+    dairyConsumption: int 
+    seafoodConsumption: int 
+    fastFashion: int 
+    sustainableShoppingFrequency: int 
+    Recycling: int 
 
 
 def calculate_total_emissions(data: FullData) -> float:
@@ -56,7 +57,6 @@ def calculate_total_emissions(data: FullData) -> float:
     lightUse_time = (data.lightUseTime)
     electricity_type = (data.typeElectricity)
     redmeat_consumption = (data.redMeatConsumption)
-    veg_meals = (data.vegetarianVeganMeals)
     local_purchase = (data.localFoodPurchases)
     poultry_consumption = (data.poultryConsumption)
     dairy_consumption = (data.dairyConsumption)
@@ -70,7 +70,7 @@ def calculate_total_emissions(data: FullData) -> float:
     energy_emissions = energyEmissions(electricity_usage, natural_gas, electricity_type)
     food_emissions = foodEmissions(redmeat_consumption, poultry_consumption, seafood_consumption, dairy_consumption)
     
-    total_emissions = transportation_emissions + energy_emissions + food_emissions
+    total_emissions = int(transportation_emissions + energy_emissions + food_emissions)
     
     print("Received data:", data)
     print("Total emissions:", total_emissions)
@@ -89,5 +89,5 @@ async def dataset(data: FullData):
 
 
 
-# if __name__ == "__main__":
-#     uvicorn.run(app, host="0.0.0.0", port=8000)
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)
