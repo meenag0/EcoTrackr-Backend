@@ -10,8 +10,7 @@ app = FastAPI()
 
 
 origins = [
-    "http://localhost:8081",
-    "localhost:8081"
+    "http://localhost:8000",
 ]
 
 app.add_middleware(
@@ -22,52 +21,49 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
-if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8081)
 
 class FullData(BaseModel):
-    averageWeeklyKm: int
-    publicTransportFreq: int  
-    airTravelHours: int       
-    carSize: int            
-    carType: int 
-    electricityUsage: int
-    naturalGasUsage:  int
-    lightUseTime: int
-    typeElectricity: int
-    redMeatConsumption: int
-    vegetarianVeganMeals: int
-    localFoodPurchases: int
-    poultryConsumption: int
-    dairyConsumption: int
-    seafoodConsumption: int
-    fastFashion: int
-    sustainableShoppingFrequency: int
-    Recycling: int
+    averageWeeklyKm: float
+    publicTransportFreq: float  
+    airTravelHours: float       
+    carSize: float            
+    carType: float 
+    electricityUsage: float
+    naturalGasUsage:  float
+    lightUseTime: float
+    typeElectricity: float
+    redMeatConsumption: float
+    localFoodPurchases: float
+    poultryConsumption: float
+    dairyConsumption: float
+    seafoodConsumption: float
+    fastFashion: float
+    sustainableShoppingFrequency: float
+    Recycling: float
 
 
-@app.post("/")
-async def dataset(data: FullData):
+def calculate_total_emissions(data: FullData) -> float:
+
     # Access data fields
-    average_weekly_km = int(data.averageWeeklyKm)
-    public_transport = int(data.publicTransportFreq)  
-    air_travel_hours = int(data.airTravelHours)
-    car_size = int(data.carSize)
-    car_type = int(data.carType)
+    average_weekly_km = (data.averageWeeklyKm)
+    public_transport = (data.publicTransportFreq)  
+    air_travel_hours = (data.airTravelHours)
+    car_size = (data.carSize)
+    car_type = (data.carType)
 
-    electricity_usage = int(data.electricityUsage)
-    natural_gas = int(data.naturalGasUsage)
-    lightUse_time = int(data.lightUseTime)
-    electricity_type = int(data.typeElectricity)
-    redmeat_consumption = int(data.redMeatConsumption)
-    veg_meals = int(data.vegetarianVeganMeals)
-    local_purchase = int(data.localFoodPurchases)
-    poultry_consumption = int(data.poultryConsumption)
-    dairy_consumption = int(data.dairyConsumption)
-    seafood_consumption = int(data.seafoodConsumption)
-    fast_fashion = int(data.fastFashion)
-    sustainable_shopping = int(data.sustainableShoppingFrequency)
-    recycling = int(data.Recycling)
+    electricity_usage = (data.electricityUsage)
+    natural_gas = (data.naturalGasUsage)
+    lightUse_time = (data.lightUseTime)
+    electricity_type = (data.typeElectricity)
+    redmeat_consumption = (data.redMeatConsumption)
+    veg_meals = (data.vegetarianVeganMeals)
+    local_purchase = (data.localFoodPurchases)
+    poultry_consumption = (data.poultryConsumption)
+    dairy_consumption = (data.dairyConsumption)
+    seafood_consumption = (data.seafoodConsumption)
+    fast_fashion = (data.fastFashion)
+    sustainable_shopping = (data.sustainableShoppingFrequency)
+    recycling = (data.Recycling)
 
     # Perform calculations using the received data
     transportation_emissions = transportEmissions(average_weekly_km, air_travel_hours, car_size, car_type)
@@ -79,6 +75,19 @@ async def dataset(data: FullData):
     print("Received data:", data)
     print("Total emissions:", total_emissions)
 
-    return {"total_emissions": total_emissions}
+    return total_emissions
+
+@app.post("/")
+async def dataset(data: FullData):
+    try:
+        total_emissions = calculate_total_emissions(data)
+        print("Received data:", data)
+        print("Total emissions:", total_emissions)
+        return {"total_emissions": total_emissions}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Error calculating total emissions: " + str(e))
 
 
+
+# if __name__ == "__main__":
+#     uvicorn.run(app, host="0.0.0.0", port=8000)
