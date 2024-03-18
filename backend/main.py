@@ -10,7 +10,7 @@ app = FastAPI()
 
 
 origins = [
-    "http://localhost:8081",
+    'http://10.0.0.192:8081'
 ]
 
 
@@ -73,13 +73,14 @@ def calculate_total_emissions(data: FullData) -> float:
     total_emissions = int(transportation_emissions + energy_emissions + food_emissions)
     
     print("Received data:", data)
-    print("Total emissions:", total_emissions)
+    print("Total emissions:", int(total_emissions))
 
     return total_emissions
 
 @app.post("/")
 async def dataset(data: FullData):
     try:
+
         total_emissions = calculate_total_emissions(data)
         print("Received data:", data)
         print("Total emissions:", total_emissions)
