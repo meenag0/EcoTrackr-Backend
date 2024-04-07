@@ -77,3 +77,4 @@ def foodEmissions(redMeatConsumption, poultryConsumption, seafoodConsumption, da
     return foodFootprint
 
 
+
