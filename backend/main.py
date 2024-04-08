@@ -6,13 +6,14 @@ from calc import transportEmissions, energyEmissions, foodEmissions
 from fastapi.middleware.cors import CORSMiddleware
 import requests
 import logging
-logger = logging.getLogger(__name__)
 from starlette.responses import Response
 import requests
 import math
 import base64 
+from starlette.responses import StreamingResponse  # Import StreamingResponse for returning binary data
 
 app = FastAPI()
+
 
 
 origins = [
@@ -122,10 +123,8 @@ def lat_lng_to_tile(latitude, longitude, zoom):
     return int(x), int(y)
 
 
-
 @app.post("/fetch_heatmap")
 async def fetch_heatmap(location_data: LocationData):
-    logger.info(f"Received location data - Latitude: {location_data.latitude}, Longitude: {location_data.longitude}")
 
     try:
 
@@ -137,20 +136,17 @@ async def fetch_heatmap(location_data: LocationData):
 
         api_key = 'AIzaSyDI8QeqTOaMCc2C4x9zA338-zb-ebKdqfQ'
         apiUrl = f'https://airquality.googleapis.com/v1/mapTypes/CAN_EC/heatmapTiles/2/{x}/{y}?key={api_key}'
+
+        print(f"Requesting data from API: {apiUrl}")
         
-        logging.info(f"Requesting data from API: {apiUrl}")
-        
-        headers = {
-            'Content-Type': 'image/png',  # Set content type to image/png
-        }
-        
-        response = requests.get(apiUrl, headers=headers)
-        logging.info(f"Response status code: {response.status_code}")
-        
-        # Check if the request was successful (s cotatus code 200)
+        response = requests.get(apiUrl, headers={'Content-Type': 'image/png'})
+
+        # Check if the request was successful
         if response.status_code == 200:
-            # Return the PNG image as binary data
-            return Response(content=response.content, media_type='image/png')
+            # Return the PNG image content as a streaming response
+            image_data_base64 = base64.b64encode(response.content).decode("utf-8")
+            return {"image_data_base64": image_data_base64}
+
         else:
             # If the request was not successful, raise an HTTPException
             response.raise_for_status()
