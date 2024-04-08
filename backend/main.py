@@ -8,6 +8,9 @@ import requests
 import logging
 logger = logging.getLogger(__name__)
 from starlette.responses import Response
+import requests
+import math
+import base64 
 
 app = FastAPI()
 
@@ -81,6 +84,9 @@ def calculate_total_emissions(data: FullData) -> float:
 
     return total_emissions
 
+class LocationData(BaseModel):
+    latitude: float
+    longitude: float
 
 @app.post("/")
 async def dataset(data: FullData):
@@ -110,17 +116,38 @@ async def dataset(data: FullData):
     except Exception as e:
         raise HTTPException(status_code=500, detail="Error calculating total emissions: " + str(e))
 
+def lat_lng_to_tile(latitude, longitude, zoom):
+    x = (longitude + 180) / 360 * (2 ** zoom)
+    y = (1 - math.log(math.tan(latitude * math.pi / 180) + 1 / math.cos(latitude * math.pi / 180)) / math.pi) / 2 * (2 ** zoom)
+    return int(x), int(y)
 
-@app.get("/fetch_heatmap")
-async def fetch_heatmap():
+
+
+@app.post("/fetch_heatmap")
+async def fetch_heatmap(location_data: LocationData):
+    logger.info(f"Received location data - Latitude: {location_data.latitude}, Longitude: {location_data.longitude}")
+
     try:
-        apiUrl = 'https://airquality.googleapis.com/v1/mapTypes/US_AQI/heatmapTiles/1/1/0?key=AIzaSyDI8QeqTOaMCc2C4x9zA338-zb-ebKdqfQ'
+
+        latitude = location_data.latitude
+        longitude = location_data.longitude
+
+        x, y = lat_lng_to_tile(latitude, longitude, 2)
+
+
+        api_key = 'AIzaSyDI8QeqTOaMCc2C4x9zA338-zb-ebKdqfQ'
+        apiUrl = f'https://airquality.googleapis.com/v1/mapTypes/CAN_EC/heatmapTiles/2/{x}/{y}?key={api_key}'
+        
         logging.info(f"Requesting data from API: {apiUrl}")
         
-        response = requests.get(apiUrl)
+        headers = {
+            'Content-Type': 'image/png',  # Set content type to image/png
+        }
+        
+        response = requests.get(apiUrl, headers=headers)
         logging.info(f"Response status code: {response.status_code}")
         
-        # Check if the request was successful (status code 200)
+        # Check if the request was successful (s cotatus code 200)
         if response.status_code == 200:
             # Return the PNG image as binary data
             return Response(content=response.content, media_type='image/png')
@@ -131,6 +158,5 @@ async def fetch_heatmap():
         logging.error(f"Error fetching heatmap data: {e}")
         raise HTTPException(status_code=500, detail="Error fetching heatmap data: " + str(e))
 
-
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="localhost", port=8080)
