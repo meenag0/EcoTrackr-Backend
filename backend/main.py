@@ -11,7 +11,7 @@ import requests
 import math
 import base64 
 from starlette.responses import StreamingResponse  # Import StreamingResponse for returning binary data
-
+from typing import List
 app = FastAPI()
 
 
@@ -89,6 +89,10 @@ class LocationData(BaseModel):
     latitude: float
     longitude: float
 
+
+
+
+
 @app.post("/")
 async def dataset(data: FullData):
     terribledVal = 6000
@@ -123,6 +127,39 @@ def lat_lng_to_tile(latitude, longitude, zoom):
     return int(x), int(y)
 
 
+async def fetch_current_conditions(location_data: LocationData, api_key: str):
+    try:
+        apiUrl = f'https://airquality.googleapis.com/v1/currentConditions:lookup?key={api_key}'
+        print(f"Requesting current conditions data from API: {apiUrl}")
+        
+        request_body = {
+            "universalAqi": True,
+            "location": {
+                "latitude": location_data.latitude,
+                "longitude": location_data.longitude
+            },
+            "extraComputations": [
+                "HEALTH_RECOMMENDATIONS",
+                "DOMINANT_POLLUTANT_CONCENTRATION",
+                "POLLUTANT_CONCENTRATION",
+                "LOCAL_AQI",
+                "POLLUTANT_ADDITIONAL_INFO"
+            ],
+            "languageCode": "en"
+        }
+
+        response = requests.post(apiUrl, json=request_body)
+        
+        if response.status_code == 200:
+            return response.json()
+        else:
+            response.raise_for_status()
+            
+    except Exception as e:
+        logging.error(f"Error fetching current conditions data: {e}")
+        raise HTTPException(status_code=500, detail="Error fetching current conditions data: " + str(e))
+
+
 @app.post("/fetch_heatmap")
 async def fetch_heatmap(location_data: LocationData):
 
@@ -139,20 +176,35 @@ async def fetch_heatmap(location_data: LocationData):
 
         print(f"Requesting data from API: {apiUrl}")
         
-        response = requests.get(apiUrl, headers={'Content-Type': 'image/png'})
+        heatmap_response = requests.get(apiUrl, headers={'Content-Type': 'image/png'})
 
         # Check if the request was successful
-        if response.status_code == 200:
+        if heatmap_response.status_code == 200:
             # Return the PNG image content as a streaming response
-            image_data_base64 = base64.b64encode(response.content).decode("utf-8")
+            image_data_base64 = base64.b64encode(heatmap_response.content).decode("utf-8")
             return {"image_data_base64": image_data_base64}
 
         else:
             # If the request was not successful, raise an HTTPException
-            response.raise_for_status()
+            heatmap_response.raise_for_status()
+
+            
     except Exception as e:
         logging.error(f"Error fetching heatmap data: {e}")
         raise HTTPException(status_code=500, detail="Error fetching heatmap data: " + str(e))
+    
+
+@app.post("/fetch_current_conditions")
+async def fetch_current_conditions_endpoint(location_data: LocationData):
+    try:
+        api_key = 'AIzaSyDI8QeqTOaMCc2C4x9zA338-zb-ebKdqfQ' 
+        return await fetch_current_conditions(location_data, api_key)
+
+    except Exception as e:
+        logging.error(f"Error fetching current conditions data: {e}")
+        raise HTTPException(status_code=500, detail="Error fetching current conditions data: " + str(e))
+
+
 
 if __name__ == "__main__":
     uvicorn.run(app, host="localhost", port=8080)
