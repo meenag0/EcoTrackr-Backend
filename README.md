@@ -6,8 +6,8 @@ EcoTrackr is a full-stack application that allows users to calculate their carbo
 
 Repositories
 -----------------------------
-Backend: [EcoTrackr Backend Repo](https://github.com/your-username/EcoTrackr-backend)  
-Frontend: [EcoTrackr Frontend Repo](https://github.com/your-username/EcoTrackr-frontend)
+Backend: [EcoTrackr Backend Repo](https://github.com/meenag0/EcoTrackr-Backend/)
+Frontend: [EcoTrackr Frontend Repo](https://github.com/meenag0/Ecotrackr/)
 
 Features
 -----------------------------
@@ -35,7 +35,7 @@ Pages and Components:
 
 ### Backend
 - **Language**: Python
-- **Framework**: Flask
+- **Framework**: FastAPI
 
 Key Files:
 -----------------------------
