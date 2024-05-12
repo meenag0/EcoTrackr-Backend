@@ -4,10 +4,10 @@ EcoTrackr
 -----------------------------
 EcoTrackr is a full-stack application that allows users to calculate their carbon footprint and provides location-based data through APIs. The app's objective is to empower individuals to make environmentally conscious decisions.
 
-Repositories
+##Repositories
 -----------------------------
-Backend: [EcoTrackr Backend Repo](https://github.com/meenag0/EcoTrackr-Backend/)
-Frontend: [EcoTrackr Frontend Repo](https://github.com/meenag0/Ecotrackr/)
+- [EcoTrackr Backend Repo](https://github.com/meenag0/Ecotrackr/tree/main)  
+- [EcoTrackr Frontend Repo](https://github.com/meenag0/Ecotrackr-Backend/tree/main)
 
 Features
 -----------------------------
@@ -19,7 +19,7 @@ Technology Stack
 -----------------------------
 ### Frontend
 - **Language**: TypeScript, JavaScript
-- **Framework**: React
+- **Framework**: React, React-Native
 
 Pages and Components:
 -----------------------------
